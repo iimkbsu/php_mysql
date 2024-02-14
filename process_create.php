@@ -18,7 +18,7 @@ $result = mysqli_query($conn, $sqlQuery);
 
 if ($result === false) {
    echo "저장하는 과정에서 문제가 생겼습니다. 관리자에게 문의해주세요";
-   error_log(mysqli_error($conn));
+   //error_log(mysqli_error($conn));
 } else {
    echo "<script>alert('글이 저장되었습니다.');
       window.location.href='index.php';</script>";

@@ -20,6 +20,9 @@ Repellat excepturi nobis illum alias odit, numquam non vel,
 et quam est iste beatae ratione explicabo veniam distinctio sit accusamus, ipsum deleniti.'
 );
 
+$update_link = '';
+$delete_link = null;
+
 if (isset($_GET['id'])) {
 
    //sql 인젝션 막기
@@ -28,8 +31,13 @@ if (isset($_GET['id'])) {
 
    $resultId = mysqli_query($conn, $getContsql);
    $row = mysqli_fetch_array($resultId);
-   
+
    $article = array('title' => htmlspecialchars($row['title']), 'description' => htmlspecialchars($row['description']));
+
+   $update_link = "<a id='bBox' href=\"update.php?id=" . $_GET['id'] . "\">글 수정</a>";
+   $delete_link = '<form action="process_delete.php" method="post">
+   <input type="hidden" name="id" value="' . $_GET['id'] . '">
+   <input type="submit" value="글 삭제"></form>';
 }
 ?>
 
@@ -40,6 +48,20 @@ if (isset($_GET['id'])) {
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>WEB</title>
+   <style>
+      #aBox {
+         border: 2px solid #D99AFA;
+         background-color: #E0C8ED;
+         color: #50037A;
+      }
+
+      #bBox {
+         border: 2px solid #3AA5ED;
+         background-color: #C0E0F5;
+         color: #013150;
+      }
+
+   </style>
 </head>
 
 <body>
@@ -57,7 +79,10 @@ if (isset($_GET['id'])) {
    </div>
    <br>
    <hr>
-   <a href="create.php">글 작성하기</a>
+   <a href="create.php" id='aBox'>글 작성</a>
+   <?= $update_link ?>
+   <br><br>
+   <?= $delete_link ?>
 </body>
 
 
