@@ -3,14 +3,17 @@
 
 $conn = mysqli_connect("127.0.0.1", "root", "", "opentutorials");
 
-//sql 인젝션 막기
-$filtered = array (
+//script 인젝션 막기
+$filtered = array(
    'title' => mysqli_real_escape_string($conn, $_POST['title']),
-   'description' => mysqli_real_escape_string($conn, $_POST['description'])
+   'description' => mysqli_real_escape_string($conn, $_POST['description']),
+   'author_id' => mysqli_real_escape_string($conn, $_POST['author_id'])
 );
 
-$sqlQuery = "INSERT INTO topic (title, description, created) VALUES (
-   '{$filtered['title']}','{$filtered['description']}',NOW());";
+$sqlQuery = "INSERT INTO topic (title, description, created, author_id) VALUES 
+(
+   '{$filtered['title']}', '{$filtered['description']}', NOW(), '{$filtered['author_id']}'
+);";
 
 //echo $sqlQuery; 올바른 쿼리 확인용
 
@@ -23,7 +26,7 @@ if ($result === false) {
    echo "<script>alert('글이 저장되었습니다.');
       window.location.href='index.php';</script>";
 
-      //header("LOCATION:index.php");
+   //header("LOCATION:index.php");
 
 }
 

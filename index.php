@@ -22,22 +22,33 @@ et quam est iste beatae ratione explicabo veniam distinctio sit accusamus, ipsum
 
 $update_link = '';
 $delete_link = null;
+$author = '';
 
 if (isset($_GET['id'])) {
 
    //sql 인젝션 막기
    $filtered_id = mysqli_real_escape_string($conn, $_GET['id']);
-   $getContsql = "SELECT * FROM topic WHERE id={$filtered_id}";
+
+   //$getContsql = "SELECT * FROM topic WHERE id={$filtered_id}";
+   $getContsql = "SELECT * FROM topic LEFT JOIN author ON topic.author_id=author.id WHERE topic.id={$filtered_id}"; //topic 테이블을 author 테이블과 조인하여 한꺼번에 가져오기
 
    $resultId = mysqli_query($conn, $getContsql);
    $row = mysqli_fetch_array($resultId);
 
-   $article = array('title' => htmlspecialchars($row['title']), 'description' => htmlspecialchars($row['description']));
+   //$article = array('title' => htmlspecialchars($row['title']), 'description' => htmlspecialchars($row['description']));
+   $article = array('title' => htmlspecialchars($row['title']), 'description' => htmlspecialchars($row['description']), 'name' => htmlspecialchars($row['name']));
 
    $update_link = "<a id='bBox' href=\"update.php?id=" . $_GET['id'] . "\">글 수정</a>";
    $delete_link = '<form action="process_delete.php" method="post">
    <input type="hidden" name="id" value="' . $_GET['id'] . '">
    <input type="submit" value="글 삭제"></form>';
+
+   
+   if($article['name'] === '') {
+      $author = "<b>by</b> NULL";
+   }else {
+      $author = "<b>by</b> ". $article['name'];
+   }
 }
 ?>
 
@@ -73,9 +84,9 @@ if (isset($_GET['id'])) {
       <?= $list; ?>
    </ol>
    <div>
-      <?= "<h2>" . $article['title'] . "</h2>"
-         . $article['description'];
-      ?>
+      <p><h2><?= $article['title']?></h2></p>
+      <p><?= $article['description']?></p>
+      <p><?=$author?></p>
    </div>
    <br>
    <hr>
