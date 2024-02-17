@@ -78,8 +78,8 @@ if (isset($_GET['id'])) {
 <body>
 
    <h1><a href='index.php'>WEB</a></h1>
-
    <hr>
+   <h3><a href="author.php" style="border: 1px solid; background-color: #CFFFC5">author</a></h3>
    <ol>
       <?= $list; ?>
    </ol>
