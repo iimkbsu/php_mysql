@@ -39,18 +39,29 @@ if (isset($_GET['id'])) {
    $article = array('title' => htmlspecialchars($row['title']), 'description' => htmlspecialchars($row['description']), 'name' => htmlspecialchars($row['name']));
 
    $update_link = "<a id='bBox' href=\"update.php?id=" . $_GET['id'] . "\">글 수정</a>";
-   $delete_link = '<form action="process_delete.php" method="post">
-   <input type="hidden" name="id" value="' . $_GET['id'] . '">
-   <input type="submit" value="글 삭제"></form>';
 
-   
-   if($article['name'] === '') {
+   // 기존 글 삭제 코드
+   // $delete_link = '<form action="process_delete.php" method="post" style="display:inline">
+   // <input type="hidden" name="id" value="' . $_GET['id'] . '">
+   // <input type="submit" value="글 삭제"></form>';
+
+   // 위의 글 삭제 코드에서 자바스크립트 confirm을 사용하여 삭제 전에 확인하는 방식 추가
+   $delete_link = '<button type="button" onclick="check_delete()">글 삭제</button>
+   <form id="delete" action="process_delete.php" method="post" style="display:inline">
+   <input type="hidden" name="id" value="'.$_GET['id'].'">
+   </form>';
+
+
+
+   if ($article['name'] === '') {
       $author = "<b>by</b> NULL";
-   }else {
-      $author = "<b>by</b> ". $article['name'];
+   } else {
+      $author = "<b>by</b> " . $article['name'];
    }
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -71,11 +82,19 @@ if (isset($_GET['id'])) {
          background-color: #C0E0F5;
          color: #013150;
       }
-
    </style>
 </head>
 
 <body>
+
+   <script>
+      //글 삭제 코드에서 자바스크립트 confirm을 사용하여 삭제 전에 확인하는 방식 추가
+      function check_delete() {
+         if(confirm("삭제하시겠습니까?")) {
+            document.getElementById("delete").submit();
+         }
+      }
+   </script>
 
    <h1><a href='index.php'>WEB</a></h1>
    <hr>
@@ -84,16 +103,25 @@ if (isset($_GET['id'])) {
       <?= $list; ?>
    </ol>
    <div>
-      <p><h2><?= $article['title']?></h2></p>
-      <p><?= $article['description']?></p>
-      <p><?=$author?></p>
+      <p>
+      <h2>
+         <?= $article['title'] ?>
+      </h2>
+      </p>
+      <p>
+         <?= $article['description'] ?>
+      </p>
+      <p>
+         <?= $author ?>
+      </p>
    </div>
    <br>
    <hr>
    <a href="create.php" id='aBox'>글 작성</a>
-   <?= $update_link ?>
    <br><br>
+   <?= $update_link ?>
    <?= $delete_link ?>
+
 </body>
 
 
